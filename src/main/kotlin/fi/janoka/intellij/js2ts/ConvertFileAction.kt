@@ -3,6 +3,7 @@ package fi.janoka.intellij.js2ts
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import fi.janoka.intellij.js2ts.converter.convertToTs
@@ -10,7 +11,7 @@ import fi.janoka.intellij.js2ts.converter.convertToTs
 class ConvertFileAction : AnAction() {
 
     private companion object {
-        const val JAVA_SCRIPT_EXTENSION = "js";
+        const val JAVA_SCRIPT_EXTENSION = "js"
     }
 
     override fun update(e: AnActionEvent) {
@@ -22,6 +23,8 @@ class ConvertFileAction : AnAction() {
         //TODO: support for CommonDataKeys.VIRTUAL_FILE_ARRAY
         val virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE) as VirtualFile
         var project = e.getData(CommonDataKeys.PROJECT) as Project
-        convertToTs(project, virtualFile)
+        ApplicationManager.getApplication().runWriteAction {
+            convertToTs(project, virtualFile)
+        }
     }
 }

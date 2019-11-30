@@ -22,6 +22,6 @@ internal class ConverterKtTest : BasePlatformTestCase() {
     }
 
     fun testConvertToTs_singleFileProject_shouldConvertImports() {
-        testConversion("one-file-project-with-imports", Path.of("index.js"))
+        testConversion("one-file-project-with-imports", Path.of("imports.js"))
     }
 }

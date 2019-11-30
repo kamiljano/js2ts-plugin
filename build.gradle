@@ -13,7 +13,7 @@ repositories {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 
-    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+    testCompile group: 'org.assertj', name: 'assertj-core', version: '3.14.0'
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/

@@ -1,0 +1,45 @@
+<idea-plugin>
+    <id>fi.janoka.intellij.js2ts-plugin</id>
+    <name>JS2TS</name>
+    <vendor email="kgjanowski@gmail.com">Kamil Janowski</vendor>
+    <version>1.0.0</version>
+
+    <description><![CDATA[
+    <h1>A plugin allowing to quickly convert JavaScript to TypeScript</h1>
+    Since JavaScript contains less data than TypeScript, not everything can be automatically generated.
+    In particular the types of parameters in most cases are fairly difficult to deduct without actually running the application.
+    The plugin however does its best to get you up to speed converting your project to TypeScript. <br>
+
+    The plugin supports the following features:
+    <ul>
+       <li>change of the file suffix from .js to .ts</li>
+       <li>replacing the require() invocations with the import statements</li>
+       <li>replacing module.exports statements with the export ones</li>
+       <li>automatic update of imports in all files that depend on the file that is being modified</li>
+       <li>automatic typing of the basic types that can be inferred based on the JavaScript implementation</li>
+    </ul>
+
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <action
+                id="StackOverflow.AskQuestion.ToolsMenu"
+                class="fi.janoka.intellij.js2ts.ConvertFileAction"
+                text="Convert to TypeScript"
+                description="Convert JavaScript file to TypeScript"
+                >
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+        </action>
+    </actions>
+</idea-plugin>

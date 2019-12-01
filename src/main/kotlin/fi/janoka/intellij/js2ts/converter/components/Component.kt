@@ -1,8 +1,12 @@
 package fi.janoka.intellij.js2ts.converter.components
 
+private val LINE_WHITE_ENDING = Regex("(\\s)*$")
+
 abstract class Component {
 
     protected abstract val replacers: Set<Replacer>
+
+    protected fun findLineWhiteEnding(match: MatchResult): String = LINE_WHITE_ENDING.find(match.value)?.value ?: ""
 
     fun replace(str: String): String {
         var result = str

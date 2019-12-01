@@ -18,7 +18,9 @@ class Replacer(private val regex: Regex, private val function: (matchResult: Mat
             val match = INDENTATION_REGEX.find(line) ?: return@map null
             match.groupValues[1]
         }
-            .filterNotNull().minBy { indentation -> indentation.length }!!
+            .filterNotNull().minBy { indentation ->
+                indentation.length
+            } ?: ""
     }
 
     fun replace(str: String): String {

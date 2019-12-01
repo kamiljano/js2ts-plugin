@@ -21,7 +21,11 @@ class ImportComponent : Component() {
             if (path == "default") {
                 return@Replacer "import " + match.groups[2]!!.value + " from " + match.groups[3]!!.value + ";" + findLineWhiteEnding(match)
             }
-            "import { " + path + " as " + match.groups[2]!!.value + " } from " + match.groups[3]!!.value + ";" + findLineWhiteEnding(match)
+            if (!path.contains(".")) {
+                return@Replacer "import { " + path + " as " + match.groups[2]!!.value + " } from " + match.groups[3]!!.value + ";" + findLineWhiteEnding(match)
+            }
+            val pathComponents = path.split(".").map { component -> component.trim() }
+            return@Replacer "import { " + pathComponents[0] + " } from " + match.groups[3]!!.value + ";" + data.lineSeparator + "const " + match.groups[2]!!.value + " = " + path + ";" + findLineWhiteEnding(match)
         },
 
         // const {dep4} = require ( 'dep4' )
@@ -36,7 +40,6 @@ class ImportComponent : Component() {
             val importVariablesList = variables.split(",")
                 .filter { variable -> DESTRUCTURED_DEFAULT.find(variable) == null }
                 .map { variable -> variable.trim()}
-                .toList()
 
             var result = "import "
             if (defaultVariableMatch != null) {
@@ -56,15 +59,15 @@ class ImportComponent : Component() {
         if (variableList.isEmpty()) return ""
 
         if (variableList.size < MAX_VARIABLES_IN_ONE_LINE) {
-            return "{ " + variableList.map {variable -> formatRenamedVariable(variable)} .joinToString(", ") + " } "
+            return "{ " + variableList.map {variable -> formatDestructuredVariable(variable)} .joinToString(", ") + " } "
         }
 
         return "{" + data.lineSeparator + variableList.map { variable ->
-            data.indentation + formatRenamedVariable(variable)
+            data.indentation + formatDestructuredVariable(variable)
         }.joinToString("," + data.lineSeparator) + data.lineSeparator + "} "
     }
 
-    private fun formatRenamedVariable(variable: String): String {
+    private fun formatDestructuredVariable(variable: String): String {
         if (variable.contains(":")) {
             val parts = variable.split(":").map { part -> part.trim() }
             return parts[0] + " as " + parts[1]

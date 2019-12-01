@@ -3,6 +3,7 @@ const os=require( 'os' ) ;
 let x = require('x')
 var y = require("y");
 const dep2 = require('dep2').lol;
+const dep3 = require('dep3').t.r.s;
 const {dep4} = require ( 'dep4' )
 const { dep5: otherDep } = require('dep5');
 const { default: dep7 } = require('dep7');

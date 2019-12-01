@@ -4,10 +4,11 @@ abstract class Component {
 
     protected abstract val replacers: Set<Replacer>
 
-    protected fun getMatchingReplacer(str: String): Replacer? {
-        return replacers.firstOrNull { replacer -> replacer.matches(str) }
-    }
+    fun replace(str: String): String {
+        var result = str
 
-    open fun matches(str: String): Boolean = getMatchingReplacer(str) != null
-    open fun replace(str: String): String = getMatchingReplacer(str)?.replace(str) ?: str
+        replacers.forEach { replacer -> result = replacer.replace(result) }
+
+        return result
+    }
 }

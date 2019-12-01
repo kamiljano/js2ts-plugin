@@ -55,8 +55,8 @@ class TestProjectDiffAssertj(actual: TestProject) :
 
         if (diff.unequalFiles.isNotEmpty()) {
             result += "The following files had non-matching contents:\r\n"
-            diff.unequalFiles.forEach { diff ->
-                result += "\tThe actual file - " + fileContentToMessagePart(diff.actual) + "\r\n\tThe expected file - " + fileContentToMessagePart(diff.expected)
+            diff.unequalFiles.forEach { fileDiff ->
+                result += "\tThe actual file - " + fileContentToMessagePart(fileDiff.actual) + "\r\n\tThe expected file - " + fileContentToMessagePart(fileDiff.expected)
             }
         }
 

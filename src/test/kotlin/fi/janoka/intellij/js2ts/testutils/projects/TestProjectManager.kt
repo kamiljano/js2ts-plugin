@@ -9,7 +9,7 @@ import java.util.ArrayList
 import java.nio.file.Path
 
 
-class TestProjectManager(private val targetDir: Path, private val projectName: String) {
+class TestProjectManager(private val projectName: String, private val targetDir: Path? = null) {
 
     private fun listResourceFiles(projectRoot: Path, root: Path): List<TestProjectFile> {
         val files = ArrayList<TestProjectFile>()
@@ -69,6 +69,7 @@ class TestProjectManager(private val targetDir: Path, private val projectName: S
         get() = Path.of("/projects", projectName, "ts")
 
     fun deployProject() {
+        targetDir?.toFile()?.deleteRecursively()
         val projectFiles = listResourceFiles(sourceProjectPath, sourceProjectPath)
         deployFiles(sourceProjectPath, projectFiles)
     }
@@ -91,8 +92,18 @@ class TestProjectManager(private val targetDir: Path, private val projectName: S
     }
 
     val deployedProject: TestProject
-        get() = TestProject(targetDir, listDeployedFiles(targetDir.toFile()))
+        get() = TestProject(targetDir!!, listDeployedFiles(targetDir.toFile()))
 
     val expectedProject: TestProject
         get() = TestProject(expectedProjectPath, listResourceFiles(expectedProjectPath, expectedProjectPath))
+
+    private fun loadResourceFile(filePath: Path): String =
+        InputStreamReader(getResourceAsStream(filePath.toString())).use { reader -> IOUtil.toString(reader) }
+
+    fun loadProjectFile(filePath: Path): TestProjectFileLoaded {
+        return TestProjectFileLoaded(
+            js = loadResourceFile(Path.of(sourceProjectPath.toString(), filePath.toString() + ".js")),
+            ts = loadResourceFile(Path.of(expectedProjectPath.toString(), filePath.toString() + ".ts"))
+        )
+    }
 }

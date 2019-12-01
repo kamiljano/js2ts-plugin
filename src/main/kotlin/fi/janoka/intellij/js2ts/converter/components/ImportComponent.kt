@@ -1,6 +1,6 @@
 package fi.janoka.intellij.js2ts.converter.components
 
-private val MAX_VARIABLES_IN_ONE_LINE = 3;
+private const val MAX_VARIABLES_IN_ONE_LINE = 3;
 private val DESTRUCTURED_DEFAULT = Regex("[\\W]default[\\s]*:\\s*([\\w_\\$]+)")
 
 class ImportComponent : Component() {

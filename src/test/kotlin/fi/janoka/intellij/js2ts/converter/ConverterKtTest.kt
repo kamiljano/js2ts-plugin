@@ -10,7 +10,7 @@ import java.nio.file.Path
 internal class ConverterKtTest : BasePlatformTestCase() {
 
     private fun testConversion(projectName: String, fileToConvert: Path) {
-        val projectManager = TestProjectManager(Path.of(project.basePath), projectName)
+        val projectManager = TestProjectManager(projectName, Path.of(project.basePath))
         projectManager.deployProject()
         ApplicationManager.getApplication().runWriteAction {
             val file = UsefulTestCase.refreshAndFindFile(Path.of(project.basePath, fileToConvert.toString()).toFile())
@@ -23,5 +23,13 @@ internal class ConverterKtTest : BasePlatformTestCase() {
 
     fun testConvertToTs_singleFileProject_shouldConvertImports() {
         testConversion("one-file-project-with-imports", Path.of("imports.js"))
+    }
+
+    fun testConvertToTs_singleFileProject_shouldConvertAllExports() {
+        testConversion("one-file-project-with-multiple-exports-of-different-types", Path.of("various-exports.js"))
+    }
+
+    fun testConvertToTs_singleFileProject_shouldConvertAllImportsAndExports() {
+        testConversion("one-file-project-with-multiple-imports-and-exports", Path.of("various-exports-and-imports.js"))
     }
 }

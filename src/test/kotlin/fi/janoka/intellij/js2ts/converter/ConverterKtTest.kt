@@ -32,4 +32,8 @@ internal class ConverterKtTest : BasePlatformTestCase() {
     fun testConvertToTs_singleFileProject_shouldConvertAllImportsAndExports() {
         testConversion("one-file-project-with-multiple-imports-and-exports", Path.of("various-exports-and-imports.js"))
     }
+
+    fun testConvertToTs_singleFileProject_shouldConvertEverything() {
+        testConversion("one-file-project-with-everything", Path.of("everything.js"))
+    }
 }

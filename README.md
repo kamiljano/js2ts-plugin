@@ -1,9 +1,7 @@
 # TODO
 
-* drop "use strict"
 * imports in dependant files 
 * make sure the menu option is visible only on JS files
-* parse imports calling function like `require('dep').lol()`
 * if the package.json does not yet include TS dependencies -> ask if they should be added
 * ask the user if we should generate tsconfig.json
 * predefine all object variables (a = {}, let a;) and function parameters as any

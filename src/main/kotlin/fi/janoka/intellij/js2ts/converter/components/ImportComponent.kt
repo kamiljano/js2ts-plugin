@@ -10,22 +10,23 @@ class ImportComponent : Component() {
         // const abc = require("lol.js");
         Replacer(
             Regex("(const|let|var)\\s+([\\w_\\$]+)\\s*=\\s*require\\s*\\(\\s*(['\"][\\w@/+-_\\.]+['\"])\\s*\\)[\\s;]*\n")
-        )  { match, data -> "import " + match.groups[2]!!.value + " from " + match.groups[3]!!.value + ";" + findLineWhiteEnding(match) },
+        )  { match, _ -> "import " + match.groups[2]!!.value + " from " + match.groups[3]!!.value + ";" + findLineWhiteEnding(match) },
 
         // const abc = require("lol").abc
         // const abc = require("lol").default
         Replacer(
-            Regex("(const|let|var)[\\s]+([\\w_\\$]+)[\\s]*=[\\s]*require[\\s]*\\([\\s]*(['\"][\\w@/+-_\\.]+['\"])[\\s]*\\)[\\s]*([\\w_\\$\\s\\.]+)[\\s;]*\n")
+            Regex("(const|let|var)[\\s]+([\\w_\\$]+)[\\s]*=[\\s]*require[\\s]*\\([\\s]*(['\"][\\w@/+-_\\.]+['\"])[\\s]*\\)[\\s]*([\\w_\\$\\s\\.]+)\\s*([\\w\\(\\)\"'`+\\-_\$\\{\\}\\s]*)[\\s;]*\n")
         )  { match, data ->
             val path = match.groups[4]!!.value.replaceFirst(".", "")
             if (path == "default") {
                 return@Replacer "import " + match.groups[2]!!.value + " from " + match.groups[3]!!.value + ";" + findLineWhiteEnding(match)
             }
-            if (!path.contains(".")) {
+            val parameters = match.groups[5]?.value ?: ""
+            if (!path.contains(".") && parameters.isEmpty()) {
                 return@Replacer "import { " + path + " as " + match.groups[2]!!.value + " } from " + match.groups[3]!!.value + ";" + findLineWhiteEnding(match)
             }
-            val pathComponents = path.split(".").map { component -> component.trim() }
-            return@Replacer "import { " + pathComponents[0] + " } from " + match.groups[3]!!.value + ";" + data.lineSeparator + "const " + match.groups[2]!!.value + " = " + path + ";" + findLineWhiteEnding(match)
+            val pathComponents = path.split(".").map { it.trim() }
+            return@Replacer "import { " + pathComponents[0] + " } from " + match.groups[3]!!.value + ";" + data.lineSeparator + "const " + match.groups[2]!!.value + " = " + path + parameters + ";" + findLineWhiteEnding(match)
         },
 
         // const {dep4} = require ( 'dep4' )
@@ -69,7 +70,7 @@ class ImportComponent : Component() {
 
     private fun formatDestructuredVariable(variable: String): String {
         if (variable.contains(":")) {
-            val parts = variable.split(":").map { part -> part.trim() }
+            val parts = variable.split(":").map { it.trim() }
             return parts[0] + " as " + parts[1]
         }
         return variable.trim()

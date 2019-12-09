@@ -1,13 +1,11 @@
 package fi.janoka.intellij.js2ts.converter
 
+import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
 import fi.janoka.intellij.js2ts.converter.components.ExportComponent
 import fi.janoka.intellij.js2ts.converter.components.ImportComponent
 import fi.janoka.intellij.js2ts.converter.components.UseStrictComponent
-import org.apache.commons.io.IOUtils
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
 
 private val ALL_COMPONENTS = setOf(
     UseStrictComponent(),
@@ -25,7 +23,9 @@ private fun getTsContent(inputContent: String): String {
 
 fun convertToTs(project: Project, file: VirtualFile) {
     file.rename(project, file.name.replace(Regex("\\.js$"), ".ts"))
-    val inputContent = InputStreamReader(file.inputStream).use { IOUtils.toString(it) }
+    val document = FileDocumentManager.getInstance().getDocument(file)!!
+    val inputContent = document.text
     val tsContent = getTsContent(inputContent)
-    OutputStreamWriter(file.getOutputStream(Object())).use { IOUtils.write(tsContent, it) }
+    document.setText(tsContent)
+    FileDocumentManager.getInstance().saveAllDocuments()
 }

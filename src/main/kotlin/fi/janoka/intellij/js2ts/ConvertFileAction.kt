@@ -10,15 +10,13 @@ import com.intellij.openapi.vfs.VirtualFile
 import fi.janoka.intellij.js2ts.converter.convertToTs
 import java.util.*
 
+private const val JAVA_SCRIPT_EXTENSION = "js"
+
 class ConvertFileAction : AnAction() {
 
-    private companion object {
-        const val JAVA_SCRIPT_EXTENSION = "js"
-    }
-
     override fun update(e: AnActionEvent) {
-        val virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE) as VirtualFile
-        this.templatePresentation.isEnabledAndVisible = virtualFile.extension?.toLowerCase()?.equals(JAVA_SCRIPT_EXTENSION) ?: false
+        val virtualFile = e.getData(CommonDataKeys.VIRTUAL_FILE)
+        e.presentation.isEnabledAndVisible = virtualFile?.extension?.toLowerCase()?.equals(JAVA_SCRIPT_EXTENSION) ?: false
     }
 
     override fun actionPerformed(e: AnActionEvent) {

@@ -9,7 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Build and test
+    - name: Test
       run: |
         pwd
         ls

@@ -1,4 +1,4 @@
-# TODO
+# TODO Before the release
 
 * BUG: if the file starts without any comments with just 'use strict' then remove all white spaces before the first import
 * remove ".js" from imports

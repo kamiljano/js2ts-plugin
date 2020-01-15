@@ -10,4 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Build and test
-      run: gradle build
+      run: |
+        pwd
+        ls
+        gradle build
